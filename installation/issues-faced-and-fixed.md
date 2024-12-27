@@ -192,5 +192,18 @@ C:\Users\ashfa\OneDrive\Desktop\My-Learning\fission\fission\samples\node>
 
 
 
+C:\Users\ashfa\OneDrive\Desktop\My-Learning\fission\fission\samples\node>fission version
+client:
+  fission/core:
+    BuildDate: "2024-10-04T07:43:36Z"
+    GitCommit: 352090d0
+    Version: v1.20.5
+server:
+  fission/core:
+    BuildDate: "2024-10-04T07:43:36Z"
+    GitCommit: 352090d0
+    Version: v1.20.5
+
+C:\Users\ashfa\OneDrive\Desktop\My-Learning\fission\fission\samples\node>
 
 ```
