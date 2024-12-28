@@ -1,5 +1,6 @@
 Detailed explanation of the Fission commands we used, along with their purpose and options:
 
+
 ---
 
 ### **1. `fission environment create`**
@@ -10,6 +11,12 @@ Creates an environment in Fission where functions can be executed. An environmen
 **Command Used:**  
 ```bash
 fission environment create --name java --image ghcr.io/fission/jvm-env --builder ghcr.io/fission/jvm-builder
+
+
+--updated 
+fission environment create --name java --image fission/jvm-env --builder fission/jvm-builder
+
+ The official Fission images are hosted on Docker Hub under fission/ namespace.
 ```
 
 **Explanation:**
@@ -514,3 +521,15 @@ spec:
     - name: secret-name
       namespace: default
 ```
+
+
+IMP Note:
+
+The documentation lacks mention of the required --namespace flag for many commands where it's mandatory
+The resource limits shown use older Kubernetes syntax. The current recommended format is:
+```
+--resources='{"requests":{"memory":"256Mi","cpu":"100m"},"limits":{"memory":"512Mi","cpu":"200m"}}'
+```
+
+Executor Types:
+The documentation mentions only newdeploy and poolmgr, but misses the newer container executor type which is also available

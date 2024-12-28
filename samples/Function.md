@@ -25,6 +25,11 @@ When creating a function in Fission using the `fission fn create` command, we ca
   --deploy smp.jar
   ```
 
+Note:
+The --deploy flag is used incorrectly. For Java functions, you need both --src and --deploy flags pointing to the JAR file.
+```
+fission fn create --name hello --env java --src hello.jar --deploy hello.jar
+```
 ---
 
 ### 2. **Advanced Options**

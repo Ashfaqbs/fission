@@ -62,6 +62,17 @@ fission route create \
 - Handles only `GET` requests.
 - Exposes the route externally using ingress.
 
+
+Note:
+The command fission route create is shown but the newer recommended syntax is fission httptrigger create
+The documentation mixes both syntaxes which could be confusing
+
+Correct usage should be:
+
+```
+fission httptrigger create --name my-http-trigger --url /hello --method GET --function my-java-func
+```
+
 ---
 
 ## 2. **Message Queue (MQ) Trigger**
