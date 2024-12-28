@@ -17,14 +17,16 @@ When creating an **Environment** in Fission, we configure the runtime for our fu
 - **Description**: The Docker image to use for the environment. This image provides the runtime (e.g., `python:3.9`, `openjdk:21`).
 - **Example**:
   ```bash
-  --image openjdk:21
+  --image openjdk:21 - no
+  --image fission/jvm-env
   ```
 
 #### c. `--builder`
 - **Description**: (Optional) The image to use for building the code (used in case of source packages).
 - **Example**:
   ```bash
-  --builder fission/java-builder
+  --builder fission/java-builder - dont work 
+  --builder fission/jvm-builder -- correct
   ```
 
 #### d. `--poolsize`
@@ -190,3 +192,41 @@ fission env create \
 - Sets CPU and memory requests/limits.
 - Enforces a 120-second timeout for function execution.
 
+
+Note:
+Resource Configuration:
+The format shown for resource requests and limits is outdated.
+Correct format should be:
+
+```
+--resources='{"requests":{"memory":"256Mi","cpu":"100m"},"limits":{"memory":"512Mi","cpu":"200m"}}'
+```
+
+
+- CPU Configuration:
+The --mincpu and --maxcpu flags are shown incorrectly. These are not valid flags for environment creation.
+The correct way to handle CPU scaling is through the resources configuration mentioned above.
+
+-  Timeout Configuration:
+The document suggests using --timeout for environment creation, but this flag is actually used for function creation, not environment creation.
+
+
+- Version Flag:
+The --version flag is shown as an option but is not actually supported in current Fission versions for environment creation.
+
+
+- Pool Size:
+While the --poolsize flag exists, the document doesn't mention that it's only applicable when using the poolmgr executor type.
+Correct note should include:
+
+```
+# Only applicable with poolmgr executor
+--poolsize 3
+```
+
+- Pod Inspection Command:
+The command shown for inspecting environment pods is incomplete.
+Correct command should include all relevant labels:
+```
+kubectl get pods -n fission-function -l environmentName=java,envName=java
+```
