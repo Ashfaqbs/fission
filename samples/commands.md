@@ -341,3 +341,176 @@ curl -X POST http://<router-ip>:<nodeport>/data-handler \
 
 ---
 
+
+
+# Fission Function Management Guide
+
+## 1. Command-Line Function Creation and Calling
+
+### Basic Function Creation
+```bash
+fission fn create [OPTIONS]
+
+# Common Options:
+--name           # Name of the function
+--env            # Environment for the function (nodejs, python, etc.)
+--code           # Path to the source code file
+--entrypoint     # Function entry point (default: 'handler')
+--spec           # Save function spec to a file without creating the function
+```
+
+Example:
+```bash
+fission fn create --name hello --env nodejs --code hello.js
+```
+
+### Function Invocation
+```bash
+fission fn test [OPTIONS]
+
+# Common Options:
+--name           # Name of the function to test
+--body          # Request body
+--header        # Request headers
+--method        # HTTP method (default: GET)
+```
+
+Example:
+```bash
+fission fn test --name hello
+```
+
+## 2. Using Function Manifests
+
+### Creating a Function Manifest
+```yaml
+apiVersion: fission.io/v1
+kind: Function
+metadata:
+  name: example-function
+  namespace: default
+spec:
+  environment:
+    name: nodejs
+    namespace: default
+  package:
+    functionName: handler
+    source:
+      literal: |
+        module.exports = async function(context) {
+          return {
+            status: 200,
+            body: "Hello, Fission!"
+          };
+        }
+```
+
+### Applying Function Manifests
+
+#### Method 1: Using kubectl
+```bash
+kubectl apply -f function-manifest.yaml
+
+# To verify:
+kubectl get function -n default
+```
+
+#### Method 2: Using Fission CLI
+```bash
+fission spec apply --wait
+```
+
+## 3. Common Operations
+
+### Updating Functions
+```bash
+# Update using CLI
+fission fn update --name hello --code updated-hello.js
+
+# Update using manifest
+kubectl apply -f updated-function-manifest.yaml
+```
+
+### Deleting Functions
+```bash
+# Delete using CLI
+fission fn delete --name hello
+
+# Delete using manifest
+kubectl delete -f function-manifest.yaml
+```
+
+### Creating HTTP Triggers
+```bash
+fission httptrigger create --url /hello \
+    --method GET \
+    --function hello
+```
+
+## 4. Advanced Usage
+
+### Environment Variables
+```yaml
+spec:
+  environment:
+    name: nodejs
+    namespace: default
+  config:
+    vars:
+      KEY: "value"
+```
+
+### Resource Limits
+```yaml
+spec:
+  resources:
+    requests:
+      memory: "128Mi"
+      cpu: "100m"
+    limits:
+      memory: "256Mi"
+      cpu: "200m"
+```
+
+## 5. Best Practices
+
+1. **Manifest Management**
+   - Keep manifests in version control
+   - Use meaningful naming conventions
+   - Document environment requirements
+
+2. **Function Development**
+   - Test locally before deployment
+   - Include error handling
+   - Monitor function performance
+
+3. **Resource Management**
+   - Set appropriate resource limits
+   - Configure scaling parameters based on load
+   - Monitor resource usage
+
+## 6. Troubleshooting
+
+Common Commands for Debugging:
+```bash
+# Get function info
+fission fn get --name hello
+
+# Get function logs
+fission fn logs --name hello
+
+# Get function pod status
+kubectl get pods -n fission-function
+```
+
+## 7. Environment Variables and Secrets
+
+```yaml
+spec:
+  configmaps:
+    - name: config-name
+      namespace: default
+  secrets:
+    - name: secret-name
+      namespace: default
+```
